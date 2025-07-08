@@ -17,6 +17,9 @@ let getHumanChoice = () => {
   return prompt(`Ingresa 'piedra', 'Papel', o 'Tijera'`);
 };
 
+let humanScore = 0;
+let computerScore = 0;
+
 console.log(getComputerChoice());
 console.log("*********************");
 console.log(getHumanChoice());

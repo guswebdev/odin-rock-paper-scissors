@@ -13,4 +13,10 @@ let getComputerChoice = () => {
   }
 };
 
+let getHumanChoice = () => {
+  return prompt(`Ingresa 'piedra', 'Papel', o 'Tijera'`);
+};
+
 console.log(getComputerChoice());
+console.log("*********************");
+console.log(getHumanChoice());

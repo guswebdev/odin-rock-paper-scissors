@@ -17,37 +17,45 @@ let getHumanChoice = () => {
   return prompt(`Ingresa 'piedra', 'Papel', o 'Tijera'`);
 };
 
-let playRound = (humanChoice, computerChoice) => {
-  let humanChoiceLower = humanChoice.toLowerCase();
-  let computerChoiceLower = computerChoice.toLowerCase();
+let playGame = () => {
+  let humanScore = 0;
+  let computerScore = 0;
 
-  if (humanChoiceLower === computerChoiceLower) {
-    console.log("¡Empate!");
-  } else if (
-    (humanChoiceLower === "tijera" && computerChoiceLower === "papel") ||
-    (humanChoiceLower === "papel" && computerChoiceLower === "piedra") ||
-    (humanChoiceLower === "piedra" && computerChoiceLower === "tijera")
-  ) {
+  let playRound = () => {
+    let humanSelection = getHumanChoice();
+    let computerSelection = getComputerChoice();
+
+    let humanChoiceLower = humanSelection.toLowerCase();
+    let computerChoiceLower = computerSelection.toLowerCase();
+
+    if (humanChoiceLower === computerChoiceLower) {
+      console.log("¡Empate!");
+    } else if (
+      (humanChoiceLower === "tijera" && computerChoiceLower === "papel") ||
+      (humanChoiceLower === "papel" && computerChoiceLower === "piedra") ||
+      (humanChoiceLower === "piedra" && computerChoiceLower === "tijera")
+    ) {
+      console.log(
+        `¡Ganaste!, ${humanChoiceLower} le gana a ${computerChoiceLower}`
+      );
+      humanScore++;
+    } else {
+      console.log(
+        `¡Perdiste!, ${computerChoiceLower} le gana a ${humanChoiceLower}`
+      );
+      computerScore++;
+    }
+
     console.log(
-      `¡Ganaste!, ${humanChoiceLower} le gana a ${computerChoiceLower}`
+      `Puntuacion: 'HUMAN' : ${humanScore} | 'COMPUTER': ${computerScore}`
     );
-    humanScore++;
-  } else {
-    console.log(
-      `¡Perdiste!, ${computerChoiceLower} le gana a ${humanChoiceLower}`
-    );
-    computerScore++;
+  };
+
+  for (let i = 1; i <= 5; i++) {
+    console.log("--------------------------");
+    console.log("Ronda " + i);
+    playRound();
   }
-
-  console.log(
-    `Puntuacion: 'HUMAN' : ${humanScore} | 'COMPUTER': ${computerScore}`
-  );
 };
 
-let humanScore = 0;
-let computerScore = 0;
-
-const humanSelection = getHumanChoice();
-const computerSelection = getComputerChoice();
-
-playRound(humanSelection, computerSelection);
+playGame();

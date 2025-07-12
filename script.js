@@ -50,12 +50,12 @@ let playGame = () => {
       `Puntuacion: 'HUMAN' : ${humanScore} | 'COMPUTER': ${computerScore}`
     );
   };
-
+  /*
   for (let i = 1; i <= 5; i++) {
     console.log("--------------------------");
     console.log("Ronda " + i);
     playRound();
-  }
+  }*/
 };
 
 playGame();

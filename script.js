@@ -1,10 +1,17 @@
 //Variables
 const d = document;
+let humanScore = 0;
+let computerScore = 0;
+let gameOver = false;
 const $btns = d.querySelectorAll(".btn");
 
 const $btnPiedra = d.querySelector("[data-id=piedra]");
 const $btnPapel = d.querySelector("[data-id=papel]");
 const $btnTijera = d.querySelector("[data-id=tijera]");
+const $mensajeResultado = d.querySelector(".rounds p");
+const $mensajePuntajeHuman = d.querySelector("[data-puntaje-human]");
+const $mensajePuntajeComputer = d.querySelector("[data-puntaje-computer]");
+const $mensajeWinner = d.querySelector("[data-winner]");
 
 //Funciones
 let getComputerChoice = () => {
@@ -20,37 +27,65 @@ let getComputerChoice = () => {
   }
 };
 
-let playGame = (humanSelection) => {
-  let humanScore = 0;
-  let computerScore = 0;
+let imprimirResultado = (nodo, human, computer, result) => {
+  if (human === computer) {
+    nodo.textContent = "¡Empate!";
+  } else if (result) {
+    nodo.textContent = `¡Ganaste!, ${human} le gana a ${computer}`;
+  } else {
+    nodo.textContent = `¡Perdiste!, ${computer} le gana a ${human}`;
+  }
+};
 
+let playGame = (humanSelection) => {
   let playRound = (humanSelection) => {
     let computerSelection = getComputerChoice();
 
     if (humanSelection === computerSelection) {
-      console.log("¡Empate!");
+      imprimirResultado($mensajeResultado, humanSelection, computerSelection);
     } else if (
       (humanSelection === "tijera" && computerSelection === "papel") ||
       (humanSelection === "papel" && computerSelection === "piedra") ||
       (humanSelection === "piedra" && computerSelection === "tijera")
     ) {
-      console.log(
-        `¡Ganaste!, ${humanSelection} le gana a ${computerSelection}`
+      imprimirResultado(
+        $mensajeResultado,
+        humanSelection,
+        computerSelection,
+        true
       );
       humanScore++;
     } else {
-      console.log(
-        `¡Perdiste!, ${computerSelection} le gana a ${humanSelection}`
+      imprimirResultado(
+        $mensajeResultado,
+        humanSelection,
+        computerSelection,
+        false
       );
       computerScore++;
     }
 
-    console.log(
-      `Puntuacion: 'HUMAN' : ${humanScore} | 'COMPUTER': ${computerScore}`
-    );
-  };
+    $mensajePuntajeHuman.textContent = humanScore;
+    $mensajePuntajeComputer.textContent = computerScore;
 
-  console.log("--------------------------");
+    if (humanScore === 5) {
+      $mensajeWinner.textContent = "HUMAN";
+      gameOver = true;
+    } else if (computerScore === 5) {
+      $mensajeWinner.textContent = "COMPUTER";
+      gameOver = true;
+    }
+  };
+  if (gameOver) {
+    humanScore = 0;
+    computerScore = 0;
+    $mensajeResultado.textContent = "-";
+    $mensajePuntajeHuman.textContent = "-";
+    $mensajePuntajeComputer.textContent = "-";
+    $mensajeWinner.textContent = "-";
+    gameOver = false;
+  }
+
   playRound(humanSelection);
 };
 

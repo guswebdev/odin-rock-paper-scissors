@@ -46,6 +46,7 @@ main {
   gap: 1rem;
   align-items: center;
   text-align: center;
+  font-size: 1.25rem;
 }
 
 .results {
@@ -55,8 +56,11 @@ main {
 
 .btn {
   background-color: #222;
-  color:white;
+  color: white;
   border: none;
   padding: 1rem;
-  margin: 1rem;
+  margin: 0.5rem;
+  font-weight: bold;
+  font-size: 1.125rem;
+  cursor: pointer;
 }

@@ -1,47 +1,46 @@
-console.log("Hello World!");
+//Variables
+const d = document;
+const $btns = d.querySelectorAll(".btn");
 
+const $btnPiedra = d.querySelector("[data-id=piedra]");
+const $btnPapel = d.querySelector("[data-id=papel]");
+const $btnTijera = d.querySelector("[data-id=tijera]");
+
+//Funciones
 let getComputerChoice = () => {
   let choice = Math.floor(Math.random() * 3) + 1;
 
   switch (choice) {
     case 1:
-      return "Piedra";
+      return "piedra";
     case 2:
-      return "Papel";
+      return "papel";
     case 3:
-      return "Tijera";
+      return "tijera";
   }
 };
 
-let getHumanChoice = () => {
-  return prompt(`Ingresa 'piedra', 'Papel', o 'Tijera'`);
-};
-
-let playGame = () => {
+let playGame = (humanSelection) => {
   let humanScore = 0;
   let computerScore = 0;
 
-  let playRound = () => {
-    let humanSelection = getHumanChoice();
+  let playRound = (humanSelection) => {
     let computerSelection = getComputerChoice();
 
-    let humanChoiceLower = humanSelection.toLowerCase();
-    let computerChoiceLower = computerSelection.toLowerCase();
-
-    if (humanChoiceLower === computerChoiceLower) {
+    if (humanSelection === computerSelection) {
       console.log("¡Empate!");
     } else if (
-      (humanChoiceLower === "tijera" && computerChoiceLower === "papel") ||
-      (humanChoiceLower === "papel" && computerChoiceLower === "piedra") ||
-      (humanChoiceLower === "piedra" && computerChoiceLower === "tijera")
+      (humanSelection === "tijera" && computerSelection === "papel") ||
+      (humanSelection === "papel" && computerSelection === "piedra") ||
+      (humanSelection === "piedra" && computerSelection === "tijera")
     ) {
       console.log(
-        `¡Ganaste!, ${humanChoiceLower} le gana a ${computerChoiceLower}`
+        `¡Ganaste!, ${humanSelection} le gana a ${computerSelection}`
       );
       humanScore++;
     } else {
       console.log(
-        `¡Perdiste!, ${computerChoiceLower} le gana a ${humanChoiceLower}`
+        `¡Perdiste!, ${computerSelection} le gana a ${humanSelection}`
       );
       computerScore++;
     }
@@ -50,12 +49,20 @@ let playGame = () => {
       `Puntuacion: 'HUMAN' : ${humanScore} | 'COMPUTER': ${computerScore}`
     );
   };
-  /*
-  for (let i = 1; i <= 5; i++) {
-    console.log("--------------------------");
-    console.log("Ronda " + i);
-    playRound();
-  }*/
+
+  console.log("--------------------------");
+  playRound(humanSelection);
 };
 
-playGame();
+//Ejecucion
+let funcionClick = (e) => {
+  if (
+    e.target === $btnPiedra ||
+    e.target === $btnPapel ||
+    e.target === $btnTijera
+  ) {
+    playGame(e.target.dataset.id);
+  }
+};
+
+d.addEventListener("click", funcionClick);

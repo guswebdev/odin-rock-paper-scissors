@@ -1,103 +1,146 @@
-//Variables
 const d = document;
-let humanScore = 0;
-let computerScore = 0;
-let gameOver = false;
-const $btns = d.querySelectorAll(".btn");
 
-const $btnPiedra = d.querySelector("[data-id=piedra]");
-const $btnPapel = d.querySelector("[data-id=papel]");
-const $btnTijera = d.querySelector("[data-id=tijera]");
-const $mensajeResultado = d.querySelector(".rounds p");
-const $mensajePuntajeHuman = d.querySelector("[data-puntaje-human]");
-const $mensajePuntajeComputer = d.querySelector("[data-puntaje-computer]");
-const $mensajeWinner = d.querySelector("[data-winner]");
+class Jugador {
+  score = 0;
+  choice;
 
-//Funciones
-let getComputerChoice = () => {
-  let choice = Math.floor(Math.random() * 3) + 1;
-
-  switch (choice) {
-    case 1:
-      return "piedra";
-    case 2:
-      return "papel";
-    case 3:
-      return "tijera";
+  set setChoice(nuevoChoice) {
+    this.choice = nuevoChoice;
   }
-};
 
-let imprimirResultado = (nodo, human, computer, result) => {
-  if (human === computer) {
-    nodo.textContent = "¡Empate!";
-  } else if (result) {
-    nodo.textContent = `¡Ganaste!, ${human} le gana a ${computer}`;
-  } else {
-    nodo.textContent = `¡Perdiste!, ${computer} le gana a ${human}`;
+  get getScore() {
+    return this.score;
   }
-};
 
-let playGame = (humanSelection) => {
-  let playRound = (humanSelection) => {
-    let computerSelection = getComputerChoice();
+  incrementarScore() {
+    this.score++;
+  }
 
+  resetearScore() {
+    this.score = 0;
+  }
+}
+
+class Computer extends Jugador {
+  score = 0;
+
+  #seleccionarComputerChoice(choice) {
+    switch (choice) {
+      case 1:
+        return "piedra";
+      case 2:
+        return "papel";
+      case 3:
+        return "tijera";
+    }
+  }
+
+  getComputerChoice() {
+    let choice = Math.floor(Math.random() * 3) + 1;
+    return this.#seleccionarComputerChoice(choice);
+  }
+}
+
+class Display {
+  $btns = d.querySelectorAll(".btn");
+
+  $btnPiedra = d.querySelector("[data-id=piedra]");
+  $btnPapel = d.querySelector("[data-id=papel]");
+  $btnTijera = d.querySelector("[data-id=tijera]");
+  $mensajeResultado = d.querySelector(".rounds p");
+  $mensajePuntajeHuman = d.querySelector("[data-puntaje-human]");
+  $mensajePuntajeComputer = d.querySelector("[data-puntaje-computer]");
+  $mensajeWinner = d.querySelector("[data-winner]");
+
+  imprimirEmpate() {
+    this.$mensajeResultado.textContent = "¡Empate!";
+  }
+  imprimirHumanRonda() {
+    //aca modificar el mensaje asignando una propiedad mano a Jugador y Computer
+    this.$mensajeResultado.textContent = `¡Ganaste!, HUMAN le gana a COMPUTER`;
+  }
+  imprimirComputerRonda() {
+    //aca modificar el mensaje asignando una propiedad mano a Jugador y Computer
+    this.$mensajeResultado.textContent = `¡Ganaste!, COMPUTER le gana a HUMAN`;
+  }
+
+  imprimirScoreHuman() {
+    this.$mensajePuntajeHuman.textContent = jugador.score;
+  }
+  imprimirScoreComputer() {
+    this.$mensajePuntajeComputer.textContent = computer.score;
+  }
+  imprimirGanadorHuman() {
+    this.$mensajeWinner.textContent = "HUMAN";
+  }
+  imprimirGanadorComputer() {
+    this.$mensajeWinner.textContent = "COMPUTER";
+  }
+  resetarDisplay() {
+    this.$mensajeResultado.textContent = "-";
+    this.$mensajePuntajeHuman.textContent = "-";
+    this.$mensajePuntajeComputer.textContent = "-";
+    this.$mensajeWinner.textContent = "-";
+  }
+}
+
+class Controlador {
+  gameOver = false;
+
+  playRound(humanSelection, computerSelection) {
     if (humanSelection === computerSelection) {
-      imprimirResultado($mensajeResultado, humanSelection, computerSelection);
+      display.imprimirEmpate();
     } else if (
       (humanSelection === "tijera" && computerSelection === "papel") ||
       (humanSelection === "papel" && computerSelection === "piedra") ||
       (humanSelection === "piedra" && computerSelection === "tijera")
     ) {
-      imprimirResultado(
-        $mensajeResultado,
-        humanSelection,
-        computerSelection,
-        true
-      );
-      humanScore++;
+      display.imprimirHumanRonda();
+      jugador.incrementarScore();
     } else {
-      imprimirResultado(
-        $mensajeResultado,
-        humanSelection,
-        computerSelection,
-        false
-      );
-      computerScore++;
+      display.imprimirComputerRonda();
+      computer.incrementarScore();
     }
 
-    $mensajePuntajeHuman.textContent = humanScore;
-    $mensajePuntajeComputer.textContent = computerScore;
+    display.imprimirScoreHuman();
 
-    if (humanScore === 5) {
-      $mensajeWinner.textContent = "HUMAN";
-      gameOver = true;
-    } else if (computerScore === 5) {
-      $mensajeWinner.textContent = "COMPUTER";
-      gameOver = true;
+    display.imprimirScoreComputer();
+
+    if (jugador.score === 5) {
+      display.imprimirGanadorHuman();
+      this.gameOver = true;
+    } else if (computer.score === 5) {
+      display.imprimirGanadorComputer();
+      this.gameOver = true;
     }
-  };
-  if (gameOver) {
-    humanScore = 0;
-    computerScore = 0;
-    $mensajeResultado.textContent = "-";
-    $mensajePuntajeHuman.textContent = "-";
-    $mensajePuntajeComputer.textContent = "-";
-    $mensajeWinner.textContent = "-";
-    gameOver = false;
   }
 
-  playRound(humanSelection);
-};
+  playGame(humanSelection, computerSelection) {
+    if (this.gameOver) {
+      jugador.resetearScore();
+      computer.resetearScore();
+      display.resetarDisplay();
+      this.gameOver = false;
+    }
 
-//Ejecucion
-let funcionClick = (e) => {
-  if (
-    e.target === $btnPiedra ||
-    e.target === $btnPapel ||
-    e.target === $btnTijera
-  ) {
-    playGame(e.target.dataset.id);
+    this.playRound(humanSelection, computerSelection);
   }
-};
 
-d.addEventListener("click", funcionClick);
+  click(e) {
+    if (
+      e.target === display.$btnPiedra ||
+      e.target === display.$btnPapel ||
+      e.target === display.$btnTijera
+    ) {
+      jugador.setChoice = e.target.dataset.id;
+      controlador.playGame(jugador.choice, computer.getComputerChoice());
+    }
+  }
+}
+
+const jugador = new Jugador();
+const computer = new Computer();
+const display = new Display();
+const controlador = new Controlador();
+
+d.addEventListener("click", controlador.click);

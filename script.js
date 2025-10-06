@@ -3,6 +3,7 @@ const d = document;
 class Jugador {
   score = 0;
   choice;
+  nombre = "Human";
 
   set setChoice(nuevoChoice) {
     this.choice = nuevoChoice;
@@ -23,6 +24,8 @@ class Jugador {
 
 class Computer extends Jugador {
   score = 0;
+  choice;
+  nombre = "Computer";
 
   #seleccionarComputerChoice(choice) {
     switch (choice) {
@@ -56,12 +59,10 @@ class Display {
     this.$mensajeResultado.textContent = "¡Empate!";
   }
   imprimirHumanRonda() {
-    //aca modificar el mensaje asignando una propiedad mano a Jugador y Computer
-    this.$mensajeResultado.textContent = `¡Ganaste!, HUMAN le gana a COMPUTER`;
+    this.$mensajeResultado.textContent = `¡Ganaste ${jugador.nombre}! ${jugador.choice} le gana a ${computer.choice}`;
   }
   imprimirComputerRonda() {
-    //aca modificar el mensaje asignando una propiedad mano a Jugador y Computer
-    this.$mensajeResultado.textContent = `¡Ganaste!, COMPUTER le gana a HUMAN`;
+    this.$mensajeResultado.textContent = `¡Ganaste ${computer.nombre}! ${computer.choice} le gana a ${jugador.choice}`;
   }
 
   imprimirScoreHuman() {
@@ -71,10 +72,10 @@ class Display {
     this.$mensajePuntajeComputer.textContent = computer.score;
   }
   imprimirGanadorHuman() {
-    this.$mensajeWinner.textContent = "HUMAN";
+    this.$mensajeWinner.textContent = jugador.nombre;
   }
   imprimirGanadorComputer() {
-    this.$mensajeWinner.textContent = "COMPUTER";
+    this.$mensajeWinner.textContent = computer.nombre;
   }
   resetarDisplay() {
     this.$mensajeResultado.textContent = "-";
@@ -133,7 +134,8 @@ class Controlador {
       e.target === display.$btnTijera
     ) {
       jugador.setChoice = e.target.dataset.id;
-      controlador.playGame(jugador.choice, computer.getComputerChoice());
+      computer.setChoice = computer.getComputerChoice();
+      controlador.playGame(jugador.choice, computer.choice);
     }
   }
 }
